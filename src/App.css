@@ -469,3 +469,13 @@ p {
 .background {
   background: #000000;
 }
+
+.feature-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.offline-icon {
+  filter: grayscale(100%); 
+}

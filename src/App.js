@@ -86,10 +86,16 @@ function App() {
               className="feature-card"
               onClick={() => handleFeatureClick('Офлайн-режим')}
             >
-              <div className="feature-icon">📶</div>
-              <h3>Офлайн-работа</h3>
-              <p>Работает без интернета</p>
-            </div>
+        <div className="feature-icon">
+          <img 
+            src="/icons/offline-icon.png" 
+            alt="Офлайн-режим" 
+            className="offline-icon"
+          />
+        </div>
+        <h3>Офлайн-работа</h3>
+        <p>Работает без интернета</p>
+        </div>
             
             <div 
               className="feature-card"
