@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { registerServiceWorker } from './registerServiceWorker';
 import './App.css';
 
@@ -7,6 +7,7 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalMessage, setModalMessage] = useState('');
+  const featuresRef = useRef(null);
 
   useEffect(() => {
     registerServiceWorker();
@@ -36,7 +37,7 @@ function App() {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-    }, 5000);
+    }, 20000);
   };
 
   const handleTestNotification = () => {
@@ -57,10 +58,20 @@ function App() {
     );
   };
 
+  const scrollFeatures = (direction) => {
+    if (featuresRef.current) {
+      const scrollAmount = 300;
+      featuresRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <h1>REDDPWA</h1>
+        <h1 className="glitch-title">REDDPWA</h1>
         
         <div className="status-info">
           <p>Статус сети: 
@@ -79,50 +90,97 @@ function App() {
           </button>
         </div>
 
-        <div className="features">
-          <h2>Функции PWA:</h2>
-          <div className="feature-grid">
-            <div 
-              className="feature-card"
+        {/* Окно с функциями в горизонтальном списке */}
+        <div className="features-window">
+          <div className="window-header">
+            <h2>Функции PWA</h2>
+          </div>
+          
+          <div className="features-container">
+            <button 
+              className="scroll-btn scroll-left"
+              onClick={() => scrollFeatures('left')}
+            >
+              ‹
+            </button>
+            
+            <div className="features-horizontal" ref={featuresRef}>
+               <div 
+              className="feature-item"
               onClick={() => handleFeatureClick('Офлайн-режим')}
             >
-        <div className="feature-icon">
-          <img 
-            src="/icons/offline-icon.png" 
-            alt="Офлайн-режим" 
-            className="offline-icon"
-          />
-        </div>
-        <h3>Офлайн-работа</h3>
-        <p>Работает без интернета</p>
-        </div>
-            
-            <div 
-              className="feature-card"
-              onClick={() => handleFeatureClick('Быстрая загрузка')}
-            >
-              <div className="feature-icon">⚡</div>
-              <h3>Быстрая загрузка</h3>
-              <p>Кэширование ресурсов</p>
+              <div className="feature-icon">
+                <img src="/icons/offline-icon.png" alt="Офлайн-режим" />
+              </div>
+              <div className="feature-content">
+                <h3>Офлайн-работа</h3>
+                <p>Работает без интернета</p>
+              </div>
+            </div>
+              
+              <div 
+                className="feature-item"
+                onClick={() => handleFeatureClick('Быстрая загрузка')}
+              >
+                <div className="feature-icon">⚡</div>
+                <div className="feature-content">
+                  <h3>Быстрая загрузка</h3>
+                  <p>Кэширование ресурсов</p>
+                </div>
+              </div>
+              
+              <div 
+                className="feature-item"
+                onClick={() => handleFeatureClick('Уведомления')}
+              >
+                <div className="feature-icon">🔔</div>
+                <div className="feature-content">
+                  <h3>Уведомления</h3>
+                  <p>Всплывающие окна</p>
+                </div>
+              </div>
+              
+              <div 
+                className="feature-item"
+                onClick={() => handleFeatureClick('Установка')}
+              >
+                <div className="feature-icon">📱</div>
+                <div className="feature-content">
+                  <h3>Установка</h3>
+                  <p>На домашний экран</p>
+                </div>
+              </div>
+
+              {/* Добавим еще несколько функций для демонстрации скролла */}
+              <div 
+                className="feature-item"
+                onClick={() => handleFeatureClick('Безопасность')}
+              >
+                <div className="feature-icon">🔒</div>
+                <div className="feature-content">
+                  <h3>Безопасность</h3>
+                  <p>HTTPS протокол</p>
+                </div>
+              </div>
+              
+              <div 
+                className="feature-item"
+                onClick={() => handleFeatureClick('Адаптивность')}
+              >
+                <div className="feature-icon">📐</div>
+                <div className="feature-content">
+                  <h3>Адаптивность</h3>
+                  <p>Для всех устройств</p>
+                </div>
+              </div>
             </div>
             
-            <div 
-              className="feature-card"
-              onClick={() => handleFeatureClick('Уведомления')}
+            <button 
+              className="scroll-btn scroll-right"
+              onClick={() => scrollFeatures('right')}
             >
-              <div className="feature-icon">🔔</div>
-              <h3>Уведомления</h3>
-              <p>Всплывающие окна</p>
-            </div>
-            
-            <div 
-              className="feature-card"
-              onClick={() => handleFeatureClick('Установка')}
-            >
-              <div className="feature-icon">📱</div>
-              <h3>Установка</h3>
-              <p>На домашний экран</p>
-            </div>
+              ›
+            </button>
           </div>
         </div>
 
