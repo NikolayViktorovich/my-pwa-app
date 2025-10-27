@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
 function MemoryGame() {
   const [cards, setCards] = useState([]);
@@ -7,8 +7,7 @@ function MemoryGame() {
   const [moves, setMoves] = useState(0);
   const [gameComplete, setGameComplete] = useState(false);
   const [bestScore, setBestScore] = useState(null);
-
-  const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+  const symbols = useMemo(() => ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'], []);
 
   const initializeGame = useCallback(() => {
     let gameCards = [...symbols, ...symbols]

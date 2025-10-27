@@ -9,7 +9,7 @@ import DebugPage from './pages/DebugPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  const [theme, setTheme] = useState('dark');
+  const [theme] = useState('dark');
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
