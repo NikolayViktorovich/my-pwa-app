@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { sendTestNotification, requestNotificationPermission } from '../registerServiceWorker';
 
 const CACHE_NAME = 'reddpwa-cache-v5';
@@ -9,21 +9,17 @@ function DebugPage() {
   const [serviceWorkerStatus, setServiceWorkerStatus] = useState('unknown');
   const [notificationPermission, setNotificationPermission] = useState('default');
   const [notificationStatus, setNotificationStatus] = useState('');
-  const updateDebugInfo = async () => {
-    const screenInfo = window.screen || {};
 
-  useEffect(() => {
-    updateDebugInfo();
-    
-    const interval = setInterval(updateDebugInfo, 12000);
-    return () => clearInterval(interval);
-  }, [updateDebugInfo]);
-
-  useEffect(() => {
-    if ('Notification' in window) {
-      setNotificationPermission(Notification.permission);
-    }
+  const formatBytes = useCallback((bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }, []);
+
+  const updateDebugInfo = useCallback(async () => {
+    const screenInfo = window.screen || {};
     
     const info = {
       userAgent: navigator.userAgent,
@@ -82,15 +78,20 @@ function DebugPage() {
     } else {
       setServiceWorkerStatus('not_supported');
     }
-  };
+  }, [formatBytes]);
 
-  const formatBytes = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+  useEffect(() => {
+    updateDebugInfo();
+    
+    const interval = setInterval(updateDebugInfo, 12000);
+    return () => clearInterval(interval);
+  }, [updateDebugInfo]);
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      setNotificationPermission(Notification.permission);
+    }
+  }, []);
 
   const clearCache = async () => {
     if ('caches' in window) {
@@ -196,8 +197,8 @@ function DebugPage() {
 
       {notificationStatus && (
         <div className={`notification-status ${
-          notificationStatus.includes ? 'success' : 
-          notificationStatus.includes ? 'error' : 'info'
+          notificationStatus.includes('отправлено') || notificationStatus.includes('получено') ? 'success' : 
+          notificationStatus.includes('Ошибка') || notificationStatus.includes('отклонено') ? 'error' : 'info'
         }`}>
           {notificationStatus}
         </div>
@@ -265,7 +266,7 @@ function DebugPage() {
         </div>
 
         <div className="debug-section">
-          <h3>📱 Устройство</h3>
+          <h3>Устройство</h3>
           <div className="info-grid">
             <div className="info-item">
               <span>Экран:</span>
