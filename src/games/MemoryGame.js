@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 function MemoryGame() {
   const [cards, setCards] = useState([]);
@@ -10,7 +10,7 @@ function MemoryGame() {
 
   const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
 
-  const initializeGame = () => {
+  const initializeGame = useCallback(() => {
     let gameCards = [...symbols, ...symbols]
       .sort(() => Math.random() - 0.5)
       .map((symbol, index) => ({
@@ -19,20 +19,20 @@ function MemoryGame() {
         flipped: false,
         solved: false
       }));
-
-  useEffect(() => {
-    const savedBestScore = localStorage.getItem('memory_best_score');
-    if (savedBestScore) setBestScore(parseInt(savedBestScore));
-    
-    initializeGame();
-}, [initializeGame]);
     
     setCards(gameCards);
     setFlipped([]);
     setSolved([]);
     setMoves(0);
     setGameComplete(false);
-  };
+  }, [symbols]);
+
+  useEffect(() => {
+    const savedBestScore = localStorage.getItem('memory_best_score');
+    if (savedBestScore) setBestScore(parseInt(savedBestScore));
+    
+    initializeGame();
+  }, [initializeGame]);
 
   const handleCardClick = (id) => {
     if (flipped.length === 2 || solved.includes(id) || flipped.includes(id)) return;
