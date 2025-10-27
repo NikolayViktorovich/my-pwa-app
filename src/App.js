@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { registerServiceWorker } from './registerServiceWorker';
 import './App.css';
 import HomePage from './pages/HomePage';
@@ -35,10 +35,6 @@ function App() {
         setShowInstallPrompt(false);
       }
     }
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   const renderPage = () => {

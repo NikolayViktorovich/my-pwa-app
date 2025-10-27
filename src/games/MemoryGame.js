@@ -10,13 +10,6 @@ function MemoryGame() {
 
   const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
 
-  useEffect(() => {
-    const savedBestScore = localStorage.getItem('memory_best_score');
-    if (savedBestScore) setBestScore(parseInt(savedBestScore));
-    
-    initializeGame();
-  }, []);
-
   const initializeGame = () => {
     let gameCards = [...symbols, ...symbols]
       .sort(() => Math.random() - 0.5)
@@ -26,6 +19,13 @@ function MemoryGame() {
         flipped: false,
         solved: false
       }));
+
+  useEffect(() => {
+    const savedBestScore = localStorage.getItem('memory_best_score');
+    if (savedBestScore) setBestScore(parseInt(savedBestScore));
+    
+    initializeGame();
+}, [initializeGame]);
     
     setCards(gameCards);
     setFlipped([]);

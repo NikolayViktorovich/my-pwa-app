@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 function WeatherPage() {
   const [weather, setWeather] = useState(null);
@@ -6,7 +6,27 @@ function WeatherPage() {
   const [city, setCity] = useState('Москва');
   const [error, setError] = useState('');
 
-  const fetchOpenMeteoWeather = async (cityName) => {
+  const getWeatherDescription = useCallback((code) => {
+    const codes = {
+      0: 'Ясно',
+      1: 'Преимущественно ясно', 
+      2: 'Переменная облачность',
+      3: 'Пасмурно',
+      45: 'Туман',
+      48: 'Туман',
+      51: 'Легкая морось',
+      53: 'Умеренная морось', 
+      55: 'Сильная морось',
+      61: 'Небольшой дождь',
+      63: 'Умеренный дождь',
+      65: 'Сильный дождь',
+      80: 'Ливни',
+      95: 'Гроза'
+    };
+    return codes[code] || 'Неизвестно';
+  }, []);
+
+  const fetchOpenMeteoWeather = useCallback(async (cityName) => {
     try {
       const geoResponse = await fetch(
         `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=ru`
@@ -30,26 +50,6 @@ function WeatherPage() {
       const weatherData = await weatherResponse.json();
       const current = weatherData.current;
       
-      const getWeatherDescription = (code) => {
-        const codes = {
-          0: 'Ясно',
-          1: 'Преимущественно ясно', 
-          2: 'Переменная облачность',
-          3: 'Пасмурно',
-          45: 'Туман',
-          48: 'Туман',
-          51: 'Легкая морось',
-          53: 'Умеренная морось', 
-          55: 'Сильная морось',
-          61: 'Небольшой дождь',
-          63: 'Умеренный дождь',
-          65: 'Сильный дождь',
-          80: 'Ливни',
-          95: 'Гроза'
-        };
-        return codes[code] || 'Неизвестно';
-      };
-      
       return {
         temperature: Math.round(current.temperature_2m),
         feelsLike: Math.round(current.apparent_temperature),
@@ -65,9 +65,9 @@ function WeatherPage() {
     } catch (error) {
       throw error;
     }
-  };
+  }, [getWeatherDescription]);
 
-  const fetchWeatherAPI = async (cityName) => {
+  const fetchWeatherAPI = useCallback(async (cityName) => {
     try {
       const response = await fetch(
         `https://api.weatherapi.com/v1/current.json?key=7c8c66e9f1a44c1b857145058242101&q=${encodeURIComponent(cityName)}&lang=ru`
@@ -91,9 +91,9 @@ function WeatherPage() {
     } catch (error) {
       throw error;
     }
-  };
+  }, []);
 
-  const fetchWeather = async () => {
+  const fetchWeather = useCallback(async () => {
     if (!city.trim()) return;
 
     setLoading(true);
@@ -115,11 +115,11 @@ function WeatherPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [city, fetchOpenMeteoWeather, fetchWeatherAPI]);
 
   useEffect(() => {
     fetchWeather();
-  }, []);
+  }, [fetchWeather]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

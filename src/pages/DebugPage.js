@@ -9,22 +9,21 @@ function DebugPage() {
   const [serviceWorkerStatus, setServiceWorkerStatus] = useState('unknown');
   const [notificationPermission, setNotificationPermission] = useState('default');
   const [notificationStatus, setNotificationStatus] = useState('');
+  const updateDebugInfo = async () => {
+    const screenInfo = window.screen || {};
 
   useEffect(() => {
     updateDebugInfo();
     
     const interval = setInterval(updateDebugInfo, 12000);
     return () => clearInterval(interval);
-  }, []);
+  }, [updateDebugInfo]);
 
   useEffect(() => {
     if ('Notification' in window) {
       setNotificationPermission(Notification.permission);
     }
   }, []);
-
-  const updateDebugInfo = async () => {
-    const screenInfo = window.screen || {};
     
     const info = {
       userAgent: navigator.userAgent,
