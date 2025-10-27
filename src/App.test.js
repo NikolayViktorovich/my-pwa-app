@@ -3,22 +3,23 @@ import App from './App';
 
 test('renders REDDPWA app', () => {
   render(<App />);
+  
   const appTitle = screen.getByText(/REDDPWA/i);
   expect(appTitle).toBeInTheDocument();
 
-  const homeButton = screen.getByText(/Главная/i);
+  const homeButton = screen.getByRole('button', { name: /Главная/i });
   expect(homeButton).toBeInTheDocument();
   
-  const gamesButton = screen.getByText(/Игры/i);
+  const gamesButton = screen.getByRole('button', { name: /Игры/i });
   expect(gamesButton).toBeInTheDocument();
   
-  const weatherButton = screen.getByText(/Погода/i);
+  const weatherButton = screen.getByRole('button', { name: /Погода/i });
   expect(weatherButton).toBeInTheDocument();
   
-  const filesButton = screen.getByText(/Файлы/i);
+  const filesButton = screen.getByRole('button', { name: /Файлы/i });
   expect(filesButton).toBeInTheDocument();
   
-  const debugButton = screen.getByText(/Debug/i);
+  const debugButton = screen.getByRole('button', { name: /Debug/i });
   expect(debugButton).toBeInTheDocument();
 });
 
@@ -37,10 +38,10 @@ test('renders PWA features', () => {
   const gamesFeature = screen.getByText(/Офлайн Игры/i);
   expect(gamesFeature).toBeInTheDocument();
   
-  const weatherFeature = screen.getByText(/Погода/i);
+  const weatherFeature = screen.getByRole('heading', { name: /Погода/i, level: 3 });
   expect(weatherFeature).toBeInTheDocument();
-  
-  const filesFeature = screen.getByText(/Файлы/i);
+
+  const filesFeature = screen.getByRole('heading', { name: /Файлы/i, level: 3 });
   expect(filesFeature).toBeInTheDocument();
   
   const debugFeature = screen.getByText(/Debug Панель/i);
