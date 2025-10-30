@@ -24,5 +24,3 @@ jobs:
         uses: treosh/lighthouse-ci-action@v10
         with:
           configPath: './lighthouserc.js'
-          uploadArtifacts: true
-          temporaryPublicStorage: true
